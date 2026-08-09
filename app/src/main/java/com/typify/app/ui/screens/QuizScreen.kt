@@ -86,7 +86,7 @@ fun QuizScreen(
             AnimatedContent(
                 targetState = currentIndex,
                 transitionSpec = {
-                    if (initialState < currentState) {
+                    if (initialState < targetState) {
                         (slideInHorizontally { it } + fadeIn()) togetherWith (slideOutHorizontally { -it } + fadeOut())
                     } else {
                         (slideInHorizontally { -it } + fadeIn()) togetherWith (slideOutHorizontally { it } + fadeOut())
@@ -94,9 +94,10 @@ fun QuizScreen(
                 },
                 label = "question"
             ) { index ->
+                val q = questions[index]
                 Column {
                     Text(
-                        text = question.text,
+                        text = q.text,
                         style = MaterialTheme.typography.headlineLarge,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.SemiBold,

@@ -23,14 +23,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TypifyTheme {
-                TypifyApp()
+                TypifyNavHost()
             }
         }
     }
 }
 
 @Composable
-fun TypifyApp() {
+fun TypifyNavHost() {
     val navController = rememberNavController()
     val db = remember { TypifyDatabase.getInstance(navController.context) }
     val scope = rememberCoroutineScope()
