@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Insights
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(val route: String) {
+    object Onboarding : Screen("onboarding")
     object Home : Screen("home")
     object Quiz : Screen("quiz/{testId}") {
         fun createRoute(testId: String) = "quiz/$testId"

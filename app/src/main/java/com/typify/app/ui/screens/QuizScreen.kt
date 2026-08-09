@@ -107,7 +107,7 @@ fun QuizScreen(
                     Spacer(modifier = Modifier.height(40.dp))
 
                     // Answer scale
-                    val dim = question.dimension
+                    val dim = q.dimension
                     AnswerScale(
                         selectedValue = selectedValue.value,
                         onAnswer = { value ->
@@ -115,6 +115,17 @@ fun QuizScreen(
                         },
                         leftLabel = dim.leftPole,
                         rightLabel = dim.rightPole
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Dimension label
+                    Text(
+                        text = "${dim.leftPole} ↔ ${dim.rightPole}",
+                        fontSize = 11.sp,
+                        color = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
                 }
             }

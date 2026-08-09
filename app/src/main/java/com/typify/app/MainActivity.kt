@@ -39,10 +39,28 @@ fun TypifyNavHost() {
 
     var currentResult by remember { mutableStateOf<TestResult?>(null) }
 
+    val hasOnboarded = remember {
+        navController.context.getSharedPreferences("typify_prefs", 0)
+            .getBoolean("onboarded", false)
+    }
+
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route
+        startDestination = if (hasOnboarded) Screen.Home.route else Screen.Onboarding.route
     ) {
+        composable(Screen.Onboarding.route) {
+            OnboardingScreen(
+                onFinish = {
+                    // Save onboarding complete
+                    navController.context.getSharedPreferences("typify_prefs", 0)
+                        .edit().putBoolean("onboarded", true).apply()
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Onboarding.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
         composable(Screen.Home.route) {
             HomeScreen(
                 onStartTest = { testId ->

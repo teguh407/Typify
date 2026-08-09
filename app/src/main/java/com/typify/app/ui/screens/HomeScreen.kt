@@ -141,21 +141,28 @@ private fun TestTypeCard(test: TestType, onClick: () -> Unit) {
         ) {
             Text(
                 text = test.icon,
-                fontSize = 36.sp
+                fontSize = 28.sp
             )
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(14.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     test.title,
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp
+                    fontSize = 15.sp
                 )
                 Text(
                     test.subtitle,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 13.sp
+                    fontSize = 12.sp
                 )
+                if (test.available) {
+                    Text(
+                        "${test.questionCount} Q · 5 min",
+                        color = MaterialTheme.colorScheme.outline,
+                        fontSize = 11.sp
+                    )
+                }
             }
             if (!test.available) {
                 TypifyChip(text = "Soon", color = MaterialTheme.colorScheme.tertiary)

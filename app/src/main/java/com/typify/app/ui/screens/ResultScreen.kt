@@ -94,7 +94,7 @@ fun ResultScreen(
             item {
                 Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 24.dp)) {
                     GlowButton(
-                        text = "Share My Type",
+                        text = "📤 Share My Type",
                         onClick = onShare,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -104,9 +104,7 @@ fun ResultScreen(
                         modifier = Modifier.fillMaxWidth().height(54.dp),
                         shape = RoundedCornerShape(16.dp)
                     ) {
-                        Icon(Icons.Default.Refresh, contentDescription = null, modifier = Modifier.size(18.dp))
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Retake Test")
+                        Text("🔄 Retake Test")
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     TextButton(onClick = onHome, modifier = Modifier.fillMaxWidth()) {
