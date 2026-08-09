@@ -16,6 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
+import com.typify.app.data.GamificationManager
 import com.typify.app.data.ScoringEngine
 import com.typify.app.data.TestResultEntity
 import com.typify.app.data.TypifyDatabase
@@ -133,6 +134,9 @@ fun TypifyNavHost() {
                         val result = ScoringEngine.calculateMBTI(answers)
                         currentResult = result
 
+                        // Record to gamification
+                        GamificationManager(navController.context).recordTest(result.typeCode)
+
                         scope.launch {
                             db.testResultDao().insert(
                                 TestResultEntity(
@@ -160,6 +164,7 @@ fun TypifyNavHost() {
                         result = result,
                         onShare = {
                             val context = navController.context
+                            GamificationManager(context).recordShare()
                             val uri = com.typify.app.util.ShareCardGenerator.generateShareCard(context, result)
                             if (uri != null) {
                                 val shareIntent = com.typify.app.util.ShareCardGenerator.createShareIntent(
@@ -189,7 +194,8 @@ fun TypifyNavHost() {
                                 popUpTo(Screen.Home.route)
                             }
                         },
-                        onHome = { navController.popBackStack() }
+                        onHome = { navController.popBackStack() },
+                        onDeepDive = { navController.navigate(Screen.TypeDetail.route) }
                     )
                 }
             }
@@ -205,6 +211,16 @@ fun TypifyNavHost() {
                 SettingsScreen(
                     onBack = { navController.popBackStack() }
                 )
+            }
+
+            composable(Screen.TypeDetail.route) {
+                val result = currentResult
+                if (result != null) {
+                    TypeDetailScreen(
+                        result = result,
+                        onBack = { navController.popBackStack() }
+                    )
+                }
             }
         }
     }

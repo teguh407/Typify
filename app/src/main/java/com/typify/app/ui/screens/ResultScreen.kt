@@ -28,7 +28,8 @@ fun ResultScreen(
     result: TestResult,
     onShare: () -> Unit,
     onRetake: () -> Unit,
-    onHome: () -> Unit
+    onHome: () -> Unit,
+    onDeepDive: () -> Unit = {}
 ) {
     // Reveal animation states
     var revealPhase by remember { mutableStateOf(0) }
@@ -121,6 +122,17 @@ fun ResultScreen(
                                 onClick = onShare,
                                 modifier = Modifier.fillMaxWidth()
                             )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            OutlinedButton(
+                                onClick = onDeepDive,
+                                modifier = Modifier.fillMaxWidth().height(54.dp),
+                                shape = RoundedCornerShape(16.dp),
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    contentColor = Color(0xFF7C3AED)
+                                )
+                            ) {
+                                Text("🧠 Deep Dive: Explore Your Type")
+                            }
                             Spacer(modifier = Modifier.height(12.dp))
                             OutlinedButton(
                                 onClick = onRetake,
