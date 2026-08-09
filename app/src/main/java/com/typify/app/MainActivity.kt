@@ -159,16 +159,30 @@ fun TypifyNavHost() {
                     ResultScreen(
                         result = result,
                         onShare = {
-                            val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
-                                type = "text/plain"
-                                putExtra(
-                                    android.content.Intent.EXTRA_TEXT,
-                                    "I'm ${result.typeCode} — ${result.title} ${result.emoji}\n\n${result.description}\n\nFind your type with Typify"
+                            val context = navController.context
+                            val uri = com.typify.app.util.ShareCardGenerator.generateShareCard(context, result)
+                            if (uri != null) {
+                                val shareIntent = com.typify.app.util.ShareCardGenerator.createShareIntent(
+                                    context,
+                                    uri,
+                                    "I'm ${result.typeCode} — ${result.title} ${result.emoji}\n\nFind your type with Typify"
+                                )
+                                context.startActivity(
+                                    android.content.Intent.createChooser(shareIntent, "Share to...")
+                                )
+                            } else {
+                                // Fallback to text share
+                                val textIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(
+                                        android.content.Intent.EXTRA_TEXT,
+                                        "I'm ${result.typeCode} — ${result.title} ${result.emoji}\n\n${result.description}\n\nFind your type with Typify"
+                                    )
+                                }
+                                context.startActivity(
+                                    android.content.Intent.createChooser(textIntent, "Share")
                                 )
                             }
-                            navController.context.startActivity(
-                                android.content.Intent.createChooser(shareIntent, "Share")
-                            )
                         },
                         onRetake = {
                             navController.navigate(Screen.Quiz.createRoute("mbti")) {
