@@ -2,8 +2,8 @@ package com.typify.app.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Insights
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(val route: String) {
@@ -20,11 +20,12 @@ sealed class Screen(val route: String) {
 data class BottomNavItem(
     val route: String,
     val label: String,
-    val icon: ImageVector
+    val icon: ImageVector,
+    val emoji: String
 )
 
 val bottomNavItems = listOf(
-    BottomNavItem("home", "Home", Icons.Default.Home),
-    BottomNavItem("history", "History", Icons.Default.Insights),
-    BottomNavItem("settings", "Settings", Icons.Default.Person),
+    BottomNavItem("home", "Home", Icons.Default.Home, "🏠"),
+    BottomNavItem("history", "History", Icons.Default.Insights, "📊"),
+    BottomNavItem("settings", "Settings", Icons.Default.Person, "⚙️"),
 )
