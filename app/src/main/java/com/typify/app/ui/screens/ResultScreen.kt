@@ -259,8 +259,8 @@ private fun ConfettiBurst(
                 modifier = Modifier
                     .offset {
                         IntOffset(
-                            ((startX + (endX - startX) * animProgress) * 800).toInt().dp.value.toInt(),
-                            ((startY + (endY - startY) * animProgress) * 1600).toInt().dp.value.toInt()
+                            ((startX + (endX - startX) * animProgress) * 800).toInt(),
+                            ((startY + (endY - startY) * animProgress) * 1600).toInt()
                         )
                     }
                     .size(10.dp)

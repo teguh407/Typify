@@ -3,7 +3,10 @@ package com.typify.app.ui.components
 import android.os.Build
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -12,14 +15,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.input.pointer.detectTapGestures
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -82,13 +86,9 @@ fun AnswerScale(
                         .size((44 * scale).dp)
                         .clip(RoundedCornerShape(14.dp))
                         .background(if (isSelected) colors[index] else colors[index].copy(alpha = 0.12f))
-                        .pointerInput(value) {
-                            detectTapGestures(
-                                onTap = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    onAnswer(value)
-                                }
-                            )
+                        .clickable {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onAnswer(value)
                         },
                     contentAlignment = Alignment.Center
                 ) {
@@ -236,7 +236,8 @@ fun GlowButton(
         targetValue = if (enabled) 1f else 0.35f,
         label = "glow"
     )
-    var isPressed by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(
         targetValue = if (isPressed) 0.96f else 1f,
         animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
@@ -256,22 +257,9 @@ fun GlowButton(
                     )
                 )
             )
-            .pointerInput(enabled) {
-                detectTapGestures(
-                    onPress = {
-                        if (enabled) {
-                            isPressed = true
-                            tryAwaitRelease()
-                            isPressed = false
-                        }
-                    },
-                    onTap = {
-                        if (enabled) {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            onClick()
-                        }
-                    }
-                )
+            .clickable(enabled = enabled) {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                onClick()
             },
         contentAlignment = Alignment.Center
     ) {
@@ -323,63 +311,6 @@ fun SwipeableCard(
         content = content
     )
 }
-
-// ── Confetti burst (simplified) ────────────────────────────────
-@Composable
-fun ConfettiOverlay(
-    visible: Boolean,
-    modifier: Modifier = Modifier
-) {
-    if (!visible) return
-
-    val colors = listOf(
-        Color(0xFF7C3AED), Color(0xFFEC4899), Color(0xFF06B6D4),
-        Color(0xFF10B981), Color(0xFFF59E0B), Color(0xFFEF4444)
-    )
-
-    val particles = remember {
-        List(30) { i ->
-            ParticleState(
-                color = colors[i % colors.size],
-                startX = (0.1f + (i % 6) * 0.15f),
-                startY = 0f,
-                delay = (i * 50).toInt()
-            )
-        }
-    }
-
-    Box(modifier = modifier.fillMaxSize()) {
-        particles.forEach { particle ->
-            var animProgress by remember { mutableStateOf(0f) }
-            LaunchedEffect(particle) {
-                kotlinx.coroutines.delay(particle.delay.toLong())
-                animProgress = animateTo(1f, tween(1500))
-            }
-            val x = particle.startX + (Math.random().toFloat() - 0.5f) * 0.3f * animProgress
-            val y = particle.startY + animProgress * 0.9f
-            val rotation = animProgress * 360f
-            val alpha = 1f - animProgress
-
-            Box(
-                modifier = Modifier
-                    .offset { IntOffset((x * 1000).toInt().dp.value.toInt(), (y * 1000).toInt().dp.value.toInt()) }
-                    .size(8.dp)
-                    .graphicsLayer {
-                        this.rotationZ = rotation
-                        this.alpha = alpha
-                    }
-                    .background(particle.color)
-            )
-        }
-    }
-}
-
-private data class ParticleState(
-    val color: Color,
-    val startX: Float,
-    val startY: Float,
-    val delay: Int
-)
 
 // ── Tilt Card (micro-interaction) ──────────────────────────────
 @Composable
