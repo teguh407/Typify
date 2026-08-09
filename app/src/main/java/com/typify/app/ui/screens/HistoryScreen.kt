@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -139,7 +141,7 @@ fun HistoryScreen(
                 item {
                     Text("Types Discovered", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.padding(top = 8.dp))
                     Spacer(modifier = Modifier.height(8.dp))
-                    androidx.compose.foundation.lazy.LazyRow(
+                    LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(stats.typesDiscovered) { type ->
@@ -161,7 +163,7 @@ fun HistoryScreen(
                 item {
                     Text("Badges (${stats.badges.count { it.unlocked }}/${stats.badges.size})", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground, modifier = Modifier.padding(top = 8.dp))
                     Spacer(modifier = Modifier.height(8.dp))
-                    androidx.compose.foundation.lazy.LazyRow(
+                    LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(stats.badges) { badge ->
@@ -221,7 +223,7 @@ private fun BadgeMini(badge: GamificationManager.Badge) {
                 .background(if (badge.unlocked) Color(0xFF7C3AED).copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceVariant),
             contentAlignment = Alignment.Center
         ) {
-            Text(badge.emoji, fontSize = 20.sp, modifier = Modifier.graphicsLayerAlpha(alpha))
+            Text(badge.emoji, fontSize = 20.sp, modifier = Modifier.alpha(alpha))
         }
         Spacer(modifier = Modifier.height(4.dp))
         Text(badge.name, fontSize = 9.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground, textAlign = TextAlign.Center)
@@ -256,7 +258,3 @@ private fun HistoryItem(result: TestResultEntity, dateFmt: SimpleDateFormat) {
     }
 }
 
-@Composable
-private fun Modifier.graphicsLayerAlpha(alpha: Float): Modifier {
-    return this.then(Modifier.graphicsLayer { this.alpha = alpha })
-}

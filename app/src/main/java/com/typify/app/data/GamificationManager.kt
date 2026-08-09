@@ -91,8 +91,8 @@ class GamificationManager(context: Context) {
         val diff = (todayDate.time - lastDateParsed.time) / (1000 * 60 * 60 * 24)
 
         return when {
-            diff == 0 -> prefs.getInt(KEY_CURRENT_STREAK, 0).coerceAtLeast(1) // same day
-            diff == 1 -> prefs.getInt(KEY_CURRENT_STREAK, 0) + 1 // consecutive day
+            diff == 0L -> prefs.getInt(KEY_CURRENT_STREAK, 0).coerceAtLeast(1) // same day
+            diff == 1L -> prefs.getInt(KEY_CURRENT_STREAK, 0) + 1 // consecutive day
             else -> 1 // streak broken, start new
         }
     }
@@ -177,7 +177,7 @@ class GamificationManager(context: Context) {
         val diff = (todayDate.time - lastDateParsed.time) / (1000 * 60 * 60 * 24)
 
         // Notify if streak might break (last test was 1 day ago and streak > 2)
-        return diff == 1 && prefs.getInt(KEY_CURRENT_STREAK, 0) >= 2
+        return diff == 1L && prefs.getInt(KEY_CURRENT_STREAK, 0) >= 2
     }
 
     companion object {
